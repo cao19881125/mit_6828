@@ -46,6 +46,7 @@ GCCPREFIX := $(shell if i386-jos-elf-objdump -i 2>&1 | grep '^elf32-i386$$' >/de
 	echo "*** To turn off this error, run 'gmake GCCPREFIX= ...'." 1>&2; \
 	echo "***" 1>&2; exit 1; fi)
 endif
+QEMU := qemu-system-i386
 
 # try to infer the correct QEMU
 ifndef QEMU
@@ -141,6 +142,7 @@ include kern/Makefrag
 
 QEMUOPTS = -hda $(OBJDIR)/kern/kernel.img -serial mon:stdio -gdb tcp::$(GDBPORT)
 QEMUOPTS += $(shell if $(QEMU) -nographic -help | grep -q '^-D '; then echo '-D qemu.log'; fi)
+#QEMUOPTS = -curses -drive file=obj/kern/kernel.img,format=raw,index=0,media=disk -serial mon:stdio -gdb tcp::$(GDBPORT)
 IMAGES = $(OBJDIR)/kern/kernel.img
 QEMUOPTS += $(QEMUEXTRA)
 
